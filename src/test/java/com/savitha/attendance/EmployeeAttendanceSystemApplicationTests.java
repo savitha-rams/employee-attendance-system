@@ -1,0 +1,13 @@
+package com.savitha.attendance;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class EmployeeAttendanceSystemApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
