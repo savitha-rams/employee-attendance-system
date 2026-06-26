@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.savitha.attendance.entity.Employee;
 import com.savitha.attendance.repository.EmployeeRepository;
+import com.savitha.attendance.service.EmployeeService;
 
 
 @RestController
 public class EmployeeController {
 
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private EmployeeService employeeService;
 
 //	@GetMapping
   /**  public String getEmployees() {
@@ -29,26 +30,26 @@ public class EmployeeController {
     
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeService.getAllEmployees();
     }
     
     @GetMapping("/employees/{id}")
     public Employee getEmployeeById(@PathVariable Long id) {
-        return employeeRepository.findById(id).orElse(new Employee());
+        return employeeService.getEmployeeById(id).orElse(new Employee());
     }
     
     @PostMapping("/employees")
     public Employee saveEmployee(@RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+        return employeeService.saveEmployee(employee);
     }
     
     @PutMapping("/employees/{id}")
     public Employee updateEmployeeById(@PathVariable Long id, @RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+        return employeeService.updateEmployee(employee);
     }
     
     @DeleteMapping("/employees/{id}")
-    public void deleteProductById(@PathVariable Long id) {
-    	employeeRepository.deleteById(id);
+    public void deleteEmployeeById(@PathVariable Long id) {
+    	employeeService.deleteEmployee(id);
     }
 }
