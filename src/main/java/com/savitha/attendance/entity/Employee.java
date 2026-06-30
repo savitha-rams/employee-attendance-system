@@ -1,6 +1,10 @@
 package com.savitha.attendance.entity;
 
+
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "employees")
@@ -10,9 +14,14 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
 
+    @NotBlank(message = "First name is mandatory")
     private String firstName;
+    @NotBlank(message = "Last name is mandatory")
     private String lastName;
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
     private String email;
+    @NotBlank(message = "Department is mandatory")
     private String department;
     
 	public Long getEmployeeId() {

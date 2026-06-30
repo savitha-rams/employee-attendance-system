@@ -17,6 +17,8 @@ import com.savitha.attendance.entity.Employee;
 import com.savitha.attendance.repository.EmployeeRepository;
 import com.savitha.attendance.service.EmployeeService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 public class EmployeeController {
@@ -40,12 +42,12 @@ public class EmployeeController {
     }
     
     @PostMapping("/employees")
-    public Employee saveEmployee(@RequestBody Employee employee) {
+    public Employee saveEmployee(@Valid @RequestBody Employee employee) {
         return employeeService.saveEmployee(employee);
     }
     
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @RequestBody Employee employee) {
+    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody Employee employee) {
         Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
