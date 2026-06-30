@@ -3,6 +3,7 @@ package com.savitha.attendance.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class EmployeeController {
     
     @GetMapping("/employees/{id}")
     public Employee getEmployeeById(@PathVariable Long id) {
-        return employeeService.getEmployeeById(id).orElse(new Employee());
+        return employeeService.getEmployeeById(id);
     }
     
     @PostMapping("/employees")
@@ -44,8 +45,9 @@ public class EmployeeController {
     }
     
     @PutMapping("/employees/{id}")
-    public Employee updateEmployeeById(@PathVariable Long id, @RequestBody Employee employee) {
-        return employeeService.updateEmployee(employee);
+    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @RequestBody Employee employee) {
+        Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
+        return ResponseEntity.ok(updatedEmployee);
     }
     
     @DeleteMapping("/employees/{id}")
