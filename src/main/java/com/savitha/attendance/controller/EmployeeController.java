@@ -3,6 +3,7 @@ package com.savitha.attendance.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ import com.savitha.attendance.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
-
+@RequestMapping("/employees")
 @RestController
 public class EmployeeController {
 
@@ -31,28 +32,29 @@ public class EmployeeController {
         return "Employee API Working";
     }*/
     
-    @GetMapping("/employees")
+    @GetMapping
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
     
-    @GetMapping("/employees/{id}")
+    @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
     
-    @PostMapping("/employees")
-    public Employee saveEmployee(@Valid @RequestBody Employee employee) {
-        return employeeService.saveEmployee(employee);
+    @PostMapping
+    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody Employee employee) {
+        Employee savedEmployee = employeeService.saveEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
     
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody Employee employee) {
         Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
     
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("/{id}")
     public void deleteEmployeeById(@PathVariable Long id) {
     	employeeService.deleteEmployee(id);
     }

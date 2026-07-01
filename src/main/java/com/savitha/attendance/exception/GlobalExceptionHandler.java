@@ -16,6 +16,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+	
+	@ExceptionHandler(InvalidLeaveRequestException.class)
+    public ResponseEntity<String> handleInvalidLeaveRequestException(InvalidLeaveRequestException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationExceptions(
@@ -29,4 +34,5 @@ public class GlobalExceptionHandler {
 
 	    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
+	
 }
