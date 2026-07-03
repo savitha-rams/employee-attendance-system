@@ -1,11 +1,14 @@
 package com.savitha.attendance.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.savitha.attendance.entity.Employee;
 import com.savitha.attendance.entity.Leave;
 import com.savitha.attendance.exception.InvalidLeaveRequestException;
+import com.savitha.attendance.exception.ResourceNotFoundException;
 import com.savitha.attendance.repository.LeaveRepository;
 
 @Service
@@ -33,5 +36,19 @@ public class LeaveService {
 		
         return leaveRepository.save(leave);
     }
+
+	public List<Leave> getAllLeaves() {
+        return leaveRepository.findAll();
+       }
+
+	public Leave getLeaveById(Long id) {
+		return leaveRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Leave not found with the id : " + id));
+	}
+
+	public void deleteLeave(Long id) {
+		Leave leave = getLeaveById(id);
+		leaveRepository.delete(leave);
+		
+	}
 
 }

@@ -27,35 +27,36 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
-//	@GetMapping
-  /**  public String getEmployees() {
+	//	@GetMapping
+	/**  public String getEmployees() {
         return "Employee API Working";
     }*/
-    
-    @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
-    }
-    
-    @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
-        return employeeService.getEmployeeById(id);
-    }
-    
-    @PostMapping
-    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody Employee employee) {
-        Employee savedEmployee = employeeService.saveEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
-    }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody Employee employee) {
-        Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
-        return ResponseEntity.ok(updatedEmployee);
-    }
-    
-    @DeleteMapping("/{id}")
-    public void deleteEmployeeById(@PathVariable Long id) {
-    	employeeService.deleteEmployee(id);
-    }
+
+	@GetMapping
+	public ResponseEntity<List<Employee>> getAllEmployees() {
+		return ResponseEntity.ok(employeeService.getAllEmployees());
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+		return ResponseEntity.ok(employeeService.getEmployeeById(id));
+	}
+
+	@PostMapping
+	public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody Employee employee) {
+		Employee savedEmployee = employeeService.saveEmployee(employee);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody Employee employee) {
+		Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
+		return ResponseEntity.ok(updatedEmployee);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id) {
+		employeeService.deleteEmployee(id);
+		return ResponseEntity.noContent().build();
+	}
 }
