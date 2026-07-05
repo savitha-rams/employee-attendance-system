@@ -21,7 +21,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidLeaveRequestException(InvalidLeaveRequestException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+	
+	@ExceptionHandler(DuplicateAttendanceException.class)
+    public ResponseEntity<String> handleDuplicateAttendanceException(DuplicateAttendanceException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+	
+	@ExceptionHandler(DuplicateCheckOutException.class)
+    public ResponseEntity<String> handleDuplicateCheckOutException(DuplicateCheckOutException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
+	@ExceptionHandler(CheckInNotFoundException.class)
+    public ResponseEntity<String> handleCheckInNotFoundException(CheckInNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationExceptions(
 	        MethodArgumentNotValidException ex) {

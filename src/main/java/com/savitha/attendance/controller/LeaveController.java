@@ -34,8 +34,6 @@ public class LeaveController {
 	@GetMapping
 	public ResponseEntity<List<Leave>> getAllLeaves() {
 		return ResponseEntity.ok(leaveService.getAllLeaves());
-		//		List<Leave> allLeaves = leaveService.getAllLeaves();
-		//		return ResponseEntity.status(HttpStatus.).body(allLeaves);
 	}
 
 	@GetMapping("/{id}")
