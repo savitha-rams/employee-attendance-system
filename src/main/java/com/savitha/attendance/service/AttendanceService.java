@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.savitha.attendance.entity.Attendance;
 import com.savitha.attendance.entity.Employee;
+import com.savitha.attendance.enums.AttendanceStatus;
 import com.savitha.attendance.exception.CheckInNotFoundException;
 import com.savitha.attendance.exception.DuplicateAttendanceException;
 import com.savitha.attendance.exception.DuplicateCheckOutException;
@@ -37,7 +38,7 @@ public class AttendanceService {
 			throw new DuplicateAttendanceException("Employee has already checked in today");
 		attendance.setAttendanceDate(today);
 		attendance.setCheckInTime(LocalTime.now());
-		attendance.setStatus("PRESENT");
+		attendance.setStatus(AttendanceStatus.PRESENT);
 		return attendanceRepository.save(attendance);		
 	}
 

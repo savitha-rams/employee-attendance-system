@@ -1,5 +1,6 @@
 package com.savitha.attendance.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.savitha.attendance.dto.EmployeeDTO;
 import com.savitha.attendance.entity.Employee;
-import com.savitha.attendance.repository.EmployeeRepository;
+import com.savitha.attendance.mapper.EmployeeMapper;
 import com.savitha.attendance.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -27,31 +29,45 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
+	@Autowired
+	private EmployeeMapper employeeMapper;
+
 	//	@GetMapping
 	/**  public String getEmployees() {
         return "Employee API Working";
     }*/
 
 	@GetMapping
-	public ResponseEntity<List<Employee>> getAllEmployees() {
-		return ResponseEntity.ok(employeeService.getAllEmployees());
+	public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+		List<Employee> employees = employeeService.getAllEmployees();
+		List<EmployeeDTO> employeeDtos = new ArrayList<EmployeeDTO>();
+		employees.forEach(employee -> employeeDtos.add(employeeMapper.toDTO(employee)));
+		
+		return ResponseEntity.ok(employeeDtos);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-		return ResponseEntity.ok(employeeService.getEmployeeById(id));
+	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
+		
+		Employee employee = employeeService.getEmployeeById(id);
+		EmployeeDTO employeeDto = employeeMapper.toDTO(employee);
+		return ResponseEntity.ok(employeeDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody Employee employee) {
+	public ResponseEntity<EmployeeDTO> saveEmployee(@Valid @RequestBody EmployeeDTO employeeDto) {
+		Employee employee = employeeMapper.toEntity(employeeDto);
 		Employee savedEmployee = employeeService.saveEmployee(employee);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+		EmployeeDTO savedEmployeeDto = employeeMapper.toDTO(savedEmployee);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployeeDto);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody Employee employee) {
+	public ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long id, @Valid @RequestBody EmployeeDTO employeeDto) {
+		Employee employee = employeeMapper.toEntity(employeeDto);
 		Employee updatedEmployee =  employeeService.updateEmployee(id, employee);
-		return ResponseEntity.ok(updatedEmployee);
+		EmployeeDTO updatedEmployeeDto = employeeMapper.toDTO(updatedEmployee);
+		return ResponseEntity.ok(updatedEmployeeDto);
 	}
 
 	@DeleteMapping("/{id}")

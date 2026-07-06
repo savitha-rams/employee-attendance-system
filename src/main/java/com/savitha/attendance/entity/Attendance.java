@@ -3,6 +3,8 @@ package com.savitha.attendance.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.savitha.attendance.enums.AttendanceStatus;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +25,6 @@ public class Attendance {
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long attendanceId;
 		
-	//	@NotNull(message = "Attendance date is mandatory")
 		private LocalDate attendanceDate;
 		
 		@Column(columnDefinition = "TIME")
@@ -31,8 +32,8 @@ public class Attendance {
 		@Column(columnDefinition = "TIME")
 		private LocalTime checkOutTime;
 		
-		//@NotBlank(message = "Status is mandatory")
-		private String status;
+		@Enumerated(EnumType.STRING)
+		private AttendanceStatus status;
 		
 		@NotNull(message = "Employee is mandatory")
 		@ManyToOne

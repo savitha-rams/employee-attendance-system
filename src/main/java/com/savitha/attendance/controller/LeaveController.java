@@ -1,5 +1,6 @@
 package com.savitha.attendance.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.savitha.attendance.dto.LeaveDTO;
 import com.savitha.attendance.entity.Leave;
+import com.savitha.attendance.mapper.LeaveMapper;
 import com.savitha.attendance.service.LeaveService;
 
 import jakarta.validation.Valid;
@@ -24,21 +27,32 @@ public class LeaveController {
 
 	@Autowired
 	private LeaveService leaveService;
+	@Autowired
+	private LeaveMapper leaveMapper;
 
 	@PostMapping
-	public ResponseEntity<Leave> applyLeave(@Valid @RequestBody Leave leave) {
+	public ResponseEntity<LeaveDTO> applyLeave(@Valid @RequestBody LeaveDTO leaveDto) {
+		Leave leave = leaveMapper.toEntity(leaveDto);
 		Leave savedLeave =  leaveService.applyLeave(leave);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedLeave);
+		LeaveDTO savedLeaveDto = leaveMapper.toDTO(savedLeave);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedLeaveDto);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Leave>> getAllLeaves() {
-		return ResponseEntity.ok(leaveService.getAllLeaves());
+	public ResponseEntity<List<LeaveDTO>> getAllLeaves() {
+		List<Leave> leaves = leaveService.getAllLeaves();
+		List<LeaveDTO> leavesDto = new ArrayList<LeaveDTO>();
+		
+		leaves.forEach(leave -> leavesDto.add(leaveMapper.toDTO(leave)));
+		
+		return ResponseEntity.ok(leavesDto);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Leave> getLeaveById(@PathVariable Long id) {
-		return ResponseEntity.ok(leaveService.getLeaveById(id));
+	public ResponseEntity<LeaveDTO> getLeaveById(@PathVariable Long id) {
+		Leave leave = leaveService.getLeaveById(id);
+		LeaveDTO leaveDto = leaveMapper.toDTO(leave);
+		return ResponseEntity.ok(leaveDto);
 	}
 
 	@DeleteMapping("/{id}")

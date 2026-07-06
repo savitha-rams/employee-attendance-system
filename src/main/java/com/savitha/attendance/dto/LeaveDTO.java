@@ -1,11 +1,10 @@
-package com.savitha.attendance.entity;
+package com.savitha.attendance.dto;
 
 import java.time.LocalDate;
 
 import com.savitha.attendance.enums.LeaveStatus;
 import com.savitha.attendance.enums.LeaveType;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,26 +12,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "leaves")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Leave {	
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long leaveId;
+public class LeaveDTO {
+	
+	private Long leaveId;
+    
+    @NotNull(message = "Start Date is mandatory")
     private LocalDate startDate;
+    
+    @NotNull(message = "End Date is mandatory")
     private LocalDate endDate;
-    @Enumerated(EnumType.STRING)
+    
+    @NotNull(message = "Leave Type is mandatory")
     private LeaveType leaveType;
-    private String reason;  
-    @Enumerated(EnumType.STRING)
-    private LeaveStatus status;    
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
-        
+    
+    @NotBlank(message = "Reason is mandatory")
+    private String reason;
+    
+    @NotNull(message = "Employee ID is mandatory")
+    private Long employeeId;
+    
+    private LeaveStatus status;
 }

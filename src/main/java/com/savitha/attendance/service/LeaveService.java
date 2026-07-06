@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.savitha.attendance.entity.Employee;
 import com.savitha.attendance.entity.Leave;
+import com.savitha.attendance.enums.LeaveStatus;
 import com.savitha.attendance.exception.InvalidLeaveRequestException;
 import com.savitha.attendance.exception.ResourceNotFoundException;
 import com.savitha.attendance.repository.LeaveRepository;
@@ -32,7 +33,7 @@ public class LeaveService {
 
 	    leave.setEmployee(employee);
 		
-		leave.setStatus("APPLIED");
+		leave.setStatus(LeaveStatus.APPLIED);
 		
         return leaveRepository.save(leave);
     }
