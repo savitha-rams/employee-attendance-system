@@ -16,6 +16,8 @@ public class EmployeeMapper {
         dto.setLastName(employee.getLastName());
         dto.setEmail(employee.getEmail());
         dto.setDepartment(employee.getDepartment());
+        dto.setPassword(employee.getPassword());
+        dto.setRole(employee.getRole());
 
         return dto;
     }
@@ -28,6 +30,8 @@ public class EmployeeMapper {
         employee.setLastName(dto.getLastName());
         employee.setEmail(dto.getEmail());
         employee.setDepartment(dto.getDepartment());
+        employee.setRole(dto.getRole());
+        employee.setPassword(dto.getPassword());
 
         return employee;
     }

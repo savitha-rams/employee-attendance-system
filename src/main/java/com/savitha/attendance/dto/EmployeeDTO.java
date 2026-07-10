@@ -1,7 +1,12 @@
 package com.savitha.attendance.dto;
 
+import com.savitha.attendance.enums.Role;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +28,10 @@ public class EmployeeDTO {
     private String email;
     @NotBlank(message = "Department is mandatory")
     private String department;
+    @NotBlank(message = "Password is mandatory")
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Role is mandatory")
+    private Role role;
 }
