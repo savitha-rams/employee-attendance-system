@@ -35,15 +35,18 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(Long id, Employee employee) {
-    	
+
     	Employee existingEmployee = getEmployeeById(id);
-        existingEmployee.setFirstName(employee.getFirstName());
-        existingEmployee.setLastName(employee.getLastName());
-        existingEmployee.setDepartment(employee.getDepartment());
-        existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        existingEmployee.setRole(employee.getRole());
-         return employeeRepository.save(existingEmployee);
+    	existingEmployee.setFirstName(employee.getFirstName());
+    	existingEmployee.setLastName(employee.getLastName());
+    	existingEmployee.setDepartment(employee.getDepartment());
+    	existingEmployee.setEmail(employee.getEmail());
+    	if (employee.getPassword() != null
+    			&& !employee.getPassword().isBlank()) {
+    		existingEmployee.setPassword(passwordEncoder.encode(employee.getPassword()));
+    	}
+    	existingEmployee.setRole(employee.getRole());
+    	return employeeRepository.save(existingEmployee);
     }
 
     public void deleteEmployee(Long id) {

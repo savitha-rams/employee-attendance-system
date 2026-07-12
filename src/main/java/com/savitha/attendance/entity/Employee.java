@@ -1,6 +1,7 @@
 package com.savitha.attendance.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.savitha.attendance.enums.Role;
 
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class Employee {
 	@Column(unique = true)
 	private String email;
 	private String department;
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;

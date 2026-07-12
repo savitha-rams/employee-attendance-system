@@ -1,5 +1,6 @@
 package com.savitha.attendance.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.savitha.attendance.enums.Role;
 
 import jakarta.persistence.EnumType;
@@ -28,6 +29,7 @@ public class EmployeeDTO {
     private String email;
     @NotBlank(message = "Department is mandatory")
     private String department;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password is mandatory")
     private String password;
 
