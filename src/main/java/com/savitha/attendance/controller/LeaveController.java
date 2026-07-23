@@ -1,9 +1,7 @@
 package com.savitha.attendance.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,15 +18,15 @@ import com.savitha.attendance.mapper.LeaveMapper;
 import com.savitha.attendance.service.LeaveService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RequestMapping("/leaves")
 @RestController
 public class LeaveController {
 
-	@Autowired
-	private LeaveService leaveService;
-	@Autowired
-	private LeaveMapper leaveMapper;
+	private final LeaveService leaveService;
+	private final LeaveMapper leaveMapper;
 
 	@PostMapping
 	public ResponseEntity<LeaveDTO> applyLeave(@Valid @RequestBody LeaveDTO leaveDto) {
@@ -41,10 +39,10 @@ public class LeaveController {
 	@GetMapping
 	public ResponseEntity<List<LeaveDTO>> getAllLeaves() {
 		List<Leave> leaves = leaveService.getAllLeaves();
-		List<LeaveDTO> leavesDto = new ArrayList<LeaveDTO>();
-		
-		leaves.forEach(leave -> leavesDto.add(leaveMapper.toDTO(leave)));
-		
+		List<LeaveDTO> leavesDto =
+				leaves.stream()
+				.map(leaveMapper::toDTO)
+				.toList();
 		return ResponseEntity.ok(leavesDto);
 	}
 

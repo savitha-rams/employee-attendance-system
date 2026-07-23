@@ -1,9 +1,7 @@
 package com.savitha.attendance.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +9,14 @@ import com.savitha.attendance.entity.Employee;
 import com.savitha.attendance.exception.ResourceNotFoundException;
 import com.savitha.attendance.repository.EmployeeRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class EmployeeService {
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
     
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final EmployeeRepository employeeRepository;    
+    private final PasswordEncoder passwordEncoder;
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();

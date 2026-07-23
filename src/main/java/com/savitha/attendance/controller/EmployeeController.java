@@ -1,9 +1,7 @@
 package com.savitha.attendance.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,34 +19,30 @@ import com.savitha.attendance.mapper.EmployeeMapper;
 import com.savitha.attendance.service.EmployeeService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RequestMapping("/employees")
 @RestController
 public class EmployeeController {
 
-	@Autowired
-	private EmployeeService employeeService;
-
-	@Autowired
-	private EmployeeMapper employeeMapper;
-
-	//	@GetMapping
-	/**  public String getEmployees() {
-        return "Employee API Working";
-    }*/
+	private final EmployeeService employeeService;
+	private final EmployeeMapper employeeMapper;
 
 	@GetMapping
 	public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
 		List<Employee> employees = employeeService.getAllEmployees();
-		List<EmployeeDTO> employeeDtos = new ArrayList<EmployeeDTO>();
-		employees.forEach(employee -> employeeDtos.add(employeeMapper.toDTO(employee)));
-		
+		List<EmployeeDTO> employeeDtos =
+				employees.stream()
+				.map(employeeMapper::toDTO)
+				.toList();
+
 		return ResponseEntity.ok(employeeDtos);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
-		
+
 		Employee employee = employeeService.getEmployeeById(id);
 		EmployeeDTO employeeDto = employeeMapper.toDTO(employee);
 		return ResponseEntity.ok(employeeDto);

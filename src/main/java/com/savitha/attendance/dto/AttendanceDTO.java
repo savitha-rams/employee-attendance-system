@@ -5,7 +5,6 @@ import java.time.LocalTime;
 
 import com.savitha.attendance.enums.AttendanceStatus;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +21,7 @@ public class AttendanceDTO {
 		private LocalDate attendanceDate;		
 		private LocalTime checkInTime;
 		private LocalTime checkOutTime;
-		private AttendanceStatus status;		
-		@NotNull(message = "Employee ID is mandatory")
+		private AttendanceStatus status;
 		private Long employeeId;
 }
 

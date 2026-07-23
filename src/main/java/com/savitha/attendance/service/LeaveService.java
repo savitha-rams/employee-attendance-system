@@ -2,7 +2,6 @@ package com.savitha.attendance.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.savitha.attendance.entity.Employee;
@@ -12,14 +11,15 @@ import com.savitha.attendance.exception.InvalidLeaveRequestException;
 import com.savitha.attendance.exception.ResourceNotFoundException;
 import com.savitha.attendance.repository.LeaveRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class LeaveService {
 	
-	@Autowired
-	private LeaveRepository leaveRepository;
+	private final LeaveRepository leaveRepository;
 	
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 	
 	public Leave applyLeave(Leave leave) {
 		

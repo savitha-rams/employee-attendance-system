@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.savitha.attendance.entity.Attendance;
@@ -17,14 +16,14 @@ import com.savitha.attendance.exception.DuplicateCheckOutException;
 import com.savitha.attendance.exception.ResourceNotFoundException;
 import com.savitha.attendance.repository.AttendanceRepository;
 
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class AttendanceService {
 
-	@Autowired
-	private AttendanceRepository attendanceRepository;
-	@Autowired EmployeeService employeeService;
+	private final AttendanceRepository attendanceRepository;
+	private final EmployeeService employeeService;
 
 
 	public Attendance checkIn(Attendance attendance) {

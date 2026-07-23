@@ -16,91 +16,127 @@ import com.savitha.attendance.security.CustomUserDetailsService;
 import com.savitha.attendance.security.JwtAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
 
-	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
-	
-	@Autowired
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
-	
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
+	private final CustomUserDetailsService customUserDetailsService;		
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(customUserDetailsService);
-        
-        authProvider.setPasswordEncoder(passwordEncoder());
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-        return authProvider;
-    }
-    
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
 
-        return configuration.getAuthenticationManager();
-    }
-    
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(customUserDetailsService);
 
-        http
-            .csrf(csrf -> csrf.disable())
+		authProvider.setPasswordEncoder(passwordEncoder());
 
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(
-                            SessionCreationPolicy.STATELESS))
-            
-            .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint((request, response, authException) -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.setContentType("application/json");
-                        response.getWriter().write(
-                            "{\"error\":\"Authentication is required to access this resource\"}"
-                        );
-                    })
-                    .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        response.setContentType("application/json");
-                        response.getWriter().write(
-                            "{\"error\":\"You do not have permission to access this resource\"}"
-                        );
-                    })
-                )
+		return authProvider;
+	}
 
-            .authorizeHttpRequests(auth -> auth
+	@Bean
+	public AuthenticationManager authenticationManager(
+			AuthenticationConfiguration configuration)
+					throws Exception {
 
-                    .requestMatchers("/auth/**").permitAll()
+		return configuration.getAuthenticationManager();
+	}
 
-                    .requestMatchers("/employees/**")
-                        .hasRole("ADMIN")
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http)
+			throws Exception {
 
-                    .requestMatchers("/leaves/**")
-                        .hasAnyRole("ADMIN", "EMPLOYEE")
+		http
 
-                    .requestMatchers("/attendance/**")
-                        .hasAnyRole("ADMIN", "EMPLOYEE")
+		.cors(cors -> cors.configurationSource(
+				corsConfigurationSource()))
 
-                    .anyRequest().authenticated())
+		.csrf(csrf -> csrf.disable())
 
-            .authenticationProvider(authenticationProvider())
+		.sessionManagement(session ->
+		session.sessionCreationPolicy(
+				SessionCreationPolicy.STATELESS))
 
-            .addFilterBefore(
-                    jwtAuthenticationFilter,
-                    UsernamePasswordAuthenticationFilter.class);
+		.exceptionHandling(exception -> exception
+				.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					response.setContentType("application/json");
+					response.getWriter().write(
+							"{\"message\":\"Authentication is required to access this resource\"}"
+							);
+				})
+				.accessDeniedHandler((request, response, accessDeniedException) -> {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					response.setContentType("application/json");
+					response.getWriter().write(
+							"{\"message\":\"You do not have permission to access this resource\"}"
+							);
+				})
+				)
 
-        return http.build();
-    }
+		.authorizeHttpRequests(auth -> auth
+
+				.requestMatchers("/auth/**").permitAll()
+
+				.requestMatchers("/employees/**")
+				.hasRole("ADMIN")
+
+				.requestMatchers("/leaves/**")
+				.hasAnyRole("ADMIN", "EMPLOYEE")
+
+				.requestMatchers("/attendance/**")
+				.hasAnyRole("ADMIN", "EMPLOYEE")
+
+				.anyRequest().authenticated())
+
+		.authenticationProvider(authenticationProvider())
+
+		.addFilterBefore(
+				jwtAuthenticationFilter,
+				UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.setAllowedOrigins(
+				List.of("http://localhost:5173"));
+
+		configuration.setAllowedMethods(
+				List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		configuration.setAllowedHeaders(
+				List.of("Authorization", "Content-Type"));
+
+		configuration.setExposedHeaders(
+				List.of("Authorization"));
+
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source =
+				new UrlBasedCorsConfigurationSource();
+
+		source.registerCorsConfiguration("/**", configuration);
+
+		return source;
+	}
 }

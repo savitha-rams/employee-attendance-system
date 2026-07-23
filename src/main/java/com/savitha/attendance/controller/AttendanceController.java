@@ -1,9 +1,7 @@
 package com.savitha.attendance.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,23 +17,23 @@ import com.savitha.attendance.mapper.AttendanceMapper;
 import com.savitha.attendance.service.AttendanceService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RequestMapping("/attendance")
 @RestController
 public class AttendanceController {
 
-	@Autowired
-	private AttendanceService attendanceService;
-	@Autowired
-	private AttendanceMapper attendanceMapper;
+	private final AttendanceService attendanceService;
+	private final AttendanceMapper attendanceMapper;
 
 	@PostMapping("/check-in")
 	public ResponseEntity<AttendanceDTO> checkIn(@Valid @RequestBody AttendanceDTO attendanceDto) {
-		
+
 		Attendance attendance = attendanceMapper.toEntity(attendanceDto);
 		Attendance savedAttendance = attendanceService.checkIn(attendance);
 		AttendanceDTO savedAttendanceDto = attendanceMapper.toDTO(savedAttendance);
-		
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedAttendanceDto);
 	}
 
@@ -43,16 +41,18 @@ public class AttendanceController {
 	public ResponseEntity<AttendanceDTO> checkOut(@PathVariable Long employeeId) {
 
 		Attendance updateedAttendance = attendanceService.checkOut(employeeId);
-		AttendanceDTO updateedAttendanceDto = attendanceMapper.toDTO(updateedAttendance);
-		
-		return ResponseEntity.ok(updateedAttendanceDto);
+		AttendanceDTO updatedAttendanceDto = attendanceMapper.toDTO(updateedAttendance);
+
+		return ResponseEntity.ok(updatedAttendanceDto);
 	}
 
 	@GetMapping
 	public ResponseEntity<List<AttendanceDTO>> getAllAttendances() {
 		List<Attendance> attendances = attendanceService.getAllAttendances();
-		List<AttendanceDTO> attendanceDtos = new ArrayList<AttendanceDTO>();
-		attendances.forEach(attendance -> attendanceDtos.add(attendanceMapper.toDTO(attendance)));
+		List<AttendanceDTO> attendanceDtos =
+				attendances.stream()
+				.map(attendanceMapper::toDTO)
+				.toList();
 		return ResponseEntity.ok(attendanceDtos);
 	}
 
